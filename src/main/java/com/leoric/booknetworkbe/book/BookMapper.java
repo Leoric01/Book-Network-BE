@@ -1,27 +1,14 @@
 package com.leoric.booknetworkbe.book;
 
-import com.leoric.booknetworkbe.book.Book;
-import com.leoric.booknetworkbe.book.BookRequest;
-import com.leoric.booknetworkbe.book.BookResponse;
-import com.leoric.booknetworkbe.book.BorrowedBookResponse;
 import com.leoric.booknetworkbe.history.BookTransactionHistory;
 import org.springframework.stereotype.Service;
+
+import java.util.Base64;
 
 import static com.leoric.booknetworkbe.file.FileUtils.readFileFromLocation;
 
 @Service
 public class BookMapper {
-
-    public Book toBook(BookRequest request) {
-        return Book.builder()
-                .title(request.title())
-                .authorName(request.authorName())
-                .isbn(request.isbn())
-                .synopsis(request.synopsis())
-                .archived(false)
-                .shareable(request.shareable())
-                .build();
-    }
 
     public BookResponse toBookResponse(Book book) {
         return BookResponse.builder()
@@ -34,7 +21,24 @@ public class BookMapper {
                 .archived(book.isArchived())
                 .shareable(book.isShareable())
                 .owner(book.getOwner().getFullname())
-                .cover(readFileFromLocation(book.getBookCover()))
+                .cover(convertToBase64(readFileFromLocation(book.getBookCover())))
+                .build();
+    }
+    private String convertToBase64(byte[] coverBytes) {
+        if (coverBytes != null) {
+            return Base64.getEncoder().encodeToString(coverBytes);
+        }
+        return null; // TODO Handle case when coverBytes is null
+    }
+
+    public Book toBook(BookRequest request) {
+        return Book.builder()
+                .title(request.title())
+                .authorName(request.authorName())
+                .isbn(request.isbn())
+                .synopsis(request.synopsis())
+                .archived(false)
+                .shareable(request.shareable())
                 .build();
     }
 

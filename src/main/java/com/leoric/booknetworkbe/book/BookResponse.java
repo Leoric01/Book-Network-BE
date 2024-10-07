@@ -2,6 +2,8 @@ package com.leoric.booknetworkbe.book;
 
 import lombok.*;
 
+import java.util.Base64;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,9 +17,16 @@ public class BookResponse {
     private String isbn;
     private String synopsis;
     private String owner;
-    private byte[] cover;
+    private String cover;
     private double rate;
     private boolean archived;
     private boolean shareable;
 
+    public void setCover(byte[] cover) {
+        this.cover = Base64.getEncoder().encodeToString(cover);
+    }
+
+    public byte[] getCoverAsBytes() {
+        return Base64.getDecoder().decode(cover);
+    }
 }
