@@ -1,6 +1,5 @@
 package com.leoric.booknetworkbe.security;
 
-import com.leoric.booknetworkbe.security.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

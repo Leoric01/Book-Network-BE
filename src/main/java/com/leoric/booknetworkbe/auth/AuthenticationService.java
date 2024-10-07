@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,7 +70,7 @@ public class AuthenticationService {
         );
     }
 
-    private String  generateAndSaveActivationToken(User user) {
+    private String generateAndSaveActivationToken(User user) {
         int length = 6;
         String generatedToken = generateActivationCode(length);
         Token token = Token.builder()
@@ -104,13 +105,13 @@ public class AuthenticationService {
     @Transactional
     public void activateAccount(String token) throws MessagingException {
         Token savedToken = tokenRepository.findByToken(token)
-                //todo define exception
-                .orElseThrow(() -> new IllegalArgumentException("Invalid token"));
-        if (savedToken.getExpiresAt().isBefore(LocalDateTime.now())) {
+                // todo exception has to be defined
+                .orElseThrow(() -> new RuntimeException("Invalid token"));
+        if (LocalDateTime.now().isAfter(savedToken.getExpiresAt())) {
             sendValidationEmail(savedToken.getUser());
-            throw new RuntimeException("Activation token has expired, new token has been sent.");
+            throw new RuntimeException("Activation token has expired. A new token has been send to the same email address");
         }
-        User user = userRepository.findById(savedToken.getUser().getId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User user = userRepository.findById(savedToken.getUser().getId()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         user.setEnabled(true);
         userRepository.save(user);
         savedToken.setValidatedAt(LocalDateTime.now());
