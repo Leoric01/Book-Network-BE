@@ -28,7 +28,7 @@ public class BookMapper {
         if (coverBytes != null) {
             return Base64.getEncoder().encodeToString(coverBytes);
         }
-        return null; // TODO Handle case when coverBytes is null
+        return ""; // TODO Handle case when coverBytes is null
     }
 
     public Book toBook(BookRequest request) {
