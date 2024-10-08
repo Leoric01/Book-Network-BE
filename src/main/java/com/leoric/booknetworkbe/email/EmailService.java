@@ -1,6 +1,5 @@
 package com.leoric.booknetworkbe.email;
 
-import com.leoric.booknetworkbe.email.EmailTemplateName;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
