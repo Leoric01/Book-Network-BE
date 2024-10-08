@@ -21,7 +21,7 @@ public class BookNetworkBeApplication {
 	@Bean
 	public CommandLineRunner runner(RoleRepository roleRepository) {
 		// intellij suggested to replace args with underscore, need to check out if it's ok. App works tho
-		return _ -> {
+		return args -> {
 			if (roleRepository.findByName("USER").isEmpty()) {
 				roleRepository.save(Role.builder().name("USER").build());
 			}

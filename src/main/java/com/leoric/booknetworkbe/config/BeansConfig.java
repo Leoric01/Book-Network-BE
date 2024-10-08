@@ -55,7 +55,14 @@ public class BeansConfig {
         final CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         // TODO: move values into application.properties
-        config.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:8080"));
+        config.setAllowedOrigins(List.of(
+                "http://localhost:4200",
+                "http://localhost:8080",
+                "http://localhost:1025",
+                "http://localhost:1080",
+                "http://localhost:9090",
+                "http://localhost:80"
+        ));
         config.setAllowedHeaders(Arrays.asList(
                 ORIGIN,
                 CONTENT_TYPE,

@@ -32,10 +32,11 @@ public class EmailService {
                           String activationCode,
                           String subject
     ) throws MessagingException {
-        String templateName = emailTemplate != null ? emailTemplate.getName() : "confirm-template";
-        // Dynamically modify the subject to include the activation code so you don't have to open email to see the code
-        if (emailTemplate == EmailTemplateName.ACTIVATE_ACCOUNT && activationCode != null) {
-            subject = subject + ": " + activationCode;
+        String templateName;
+        if (emailTemplate != null) {
+            templateName = emailTemplate.getName();
+        } else {
+            templateName = "confirm-template";
         }
 
         MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -55,7 +56,7 @@ public class EmailService {
 
         mimeMessageHelper.setFrom("support@leoric.com");
         mimeMessageHelper.setTo(to);
-        mimeMessageHelper.setSubject(subject);
+        mimeMessageHelper.setSubject(subject + ": " + activationCode);
 
         String template = templateEngine.process(templateName, context);
         mimeMessageHelper.setText(template, true);
